@@ -19,13 +19,7 @@ const Scene = ({ viewMode }: { viewMode: "fps" | "dollhouse" }) => {
 
   return (
     <>
-      {/* Softer lighting for natural texture appearance */}
-      <ambientLight intensity={0.4} color={0xffffff} />
-      <directionalLight
-        position={[0, 10, 0]}
-        intensity={0.3}
-        color={0xffffff}
-      />
+      {/* No lights needed - using baked lighting from the texture */}
 
       {/* The 3D model */}
       <Model />
@@ -34,10 +28,8 @@ const Scene = ({ viewMode }: { viewMode: "fps" | "dollhouse" }) => {
 };
 
 const CameraController = ({
-  viewMode,
   onCameraChange,
 }: {
-  viewMode: "fps" | "dollhouse";
   onCameraChange: (camera: THREE.Camera) => void;
 }) => {
   const { camera } = useThree();
@@ -54,7 +46,7 @@ interface ExperienceHandle {
   switchToFPSView: () => void;
 }
 
-export const Experience = forwardRef<ExperienceHandle>((props, ref) => {
+export const Experience = forwardRef<ExperienceHandle>((_, ref) => {
   const [viewMode, setViewMode] = useState<"fps" | "dollhouse">("fps");
   const pointerControlsRef = useRef<any>(null);
   const orbitControlsRef = useRef<any>(null);
@@ -105,24 +97,18 @@ export const Experience = forwardRef<ExperienceHandle>((props, ref) => {
 
   return (
     <Canvas
-      flat
-      camera={{
-        position: [0, 10, 20],
-        fov: 75,
-        near: 0.1,
-        far: 10000,
-      }}
+      camera={{ position: [0, 10, 20], fov: 75, near: 0.1, far: 10000 }}
       gl={{
+        // Try a gentle curve
+        toneMapping: THREE.ACESFilmicToneMapping,
+        toneMappingExposure: 0.9, // 0.7–0.95 often works for baked textures
         outputColorSpace: THREE.SRGBColorSpace,
         antialias: true,
         alpha: false,
         powerPreference: "high-performance",
       }}
     >
-      <CameraController
-        viewMode={viewMode}
-        onCameraChange={handleCameraChange}
-      />
+      <CameraController onCameraChange={handleCameraChange} />
 
       <Suspense fallback={null}>
         <Scene viewMode={viewMode} />

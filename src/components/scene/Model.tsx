@@ -12,18 +12,27 @@ export function Model(props: any) {
 
   // Configure texture properties
   useEffect(() => {
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(1, 1); // Remove negative values that flip texture
+    // texture.wrapS = THREE.RepeatWrapping;
+    // texture.wrapT = THREE.RepeatWrapping;
+    // texture.repeat.set(1, 1); // Remove negative values that flip texture
+
+    // texture.magFilter = THREE.LinearFilter;
+    // texture.generateMipmaps = true;
+    // texture.needsUpdate = true;
+
+    texture.colorSpace = THREE.SRGBColorSpace; // r152+
+    // texture.encoding = THREE.sRGBEncoding;  // for older three
     texture.minFilter = THREE.LinearMipmapLinearFilter;
     texture.magFilter = THREE.LinearFilter;
     texture.generateMipmaps = true;
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1, 1);
     texture.needsUpdate = true;
   }, [texture]);
 
-  // Create optimized materials
+  // Create optimized materials for baked lighting
   const materials = useMemo(() => {
-    // Primary material with true texture colors (unaffected by lighting)
+    // Primary material for baked textures (unaffected by lighting)
     const primaryMaterial = new THREE.MeshBasicMaterial({
       map: texture,
       side: THREE.DoubleSide,
