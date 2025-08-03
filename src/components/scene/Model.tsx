@@ -23,20 +23,16 @@ export function Model(props: any) {
 
   // Create optimized materials
   const materials = useMemo(() => {
-    // Primary material with proper lighting
-    const primaryMaterial = new THREE.MeshStandardMaterial({
+    // Primary material with true texture colors (unaffected by lighting)
+    const primaryMaterial = new THREE.MeshBasicMaterial({
       map: texture,
       side: THREE.DoubleSide,
-      roughness: 0.7,
-      metalness: 0.1,
     });
 
     // Fallback material for meshes without UV coordinates
-    const fallbackMaterial = new THREE.MeshStandardMaterial({
+    const fallbackMaterial = new THREE.MeshBasicMaterial({
       color: 0xcccccc,
       side: THREE.DoubleSide,
-      roughness: 0.8,
-      metalness: 0.0,
     });
 
     return { primaryMaterial, fallbackMaterial };

@@ -1,5 +1,3 @@
-import React from "react";
-
 interface HudProps {
   onDollhouseView: () => void;
   onResetView: () => void;

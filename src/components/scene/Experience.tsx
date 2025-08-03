@@ -1,9 +1,5 @@
 import { Canvas, useThree } from "@react-three/fiber";
-import {
-  PointerLockControls,
-  OrbitControls,
-  Environment,
-} from "@react-three/drei";
+import { PointerLockControls, OrbitControls } from "@react-three/drei";
 import {
   Suspense,
   useRef,
@@ -23,24 +19,13 @@ const Scene = ({ viewMode }: { viewMode: "fps" | "dollhouse" }) => {
 
   return (
     <>
-      {/* Lighting setup */}
-      <ambientLight intensity={0.4} />
+      {/* Softer lighting for natural texture appearance */}
+      <ambientLight intensity={0.4} color={0xffffff} />
       <directionalLight
-        position={[10, 10, 5]}
-        intensity={0.8}
-        castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
-        shadow-camera-far={50}
-        shadow-camera-left={-10}
-        shadow-camera-right={10}
-        shadow-camera-top={10}
-        shadow-camera-bottom={-10}
+        position={[0, 10, 0]}
+        intensity={0.3}
+        color={0xffffff}
       />
-      <pointLight position={[0, 5, 0]} intensity={0.3} />
-
-      {/* Environment for better reflections */}
-      <Environment preset="apartment" />
 
       {/* The 3D model */}
       <Model />
@@ -120,14 +105,15 @@ export const Experience = forwardRef<ExperienceHandle>((props, ref) => {
 
   return (
     <Canvas
+      flat
       camera={{
         position: [0, 10, 20],
         fov: 75,
         near: 0.1,
-        far: 1000,
+        far: 10000,
       }}
-      shadows
       gl={{
+        outputColorSpace: THREE.SRGBColorSpace,
         antialias: true,
         alpha: false,
         powerPreference: "high-performance",

@@ -19,7 +19,7 @@ export const useSmoothNavigation = () => {
 
     if (controls) {
       // Animate OrbitControls target
-      gsap.to(controls.target, {
+      gsap.to((controls as any).target, {
         x: point.x,
         y: point.y,
         z: point.z,
